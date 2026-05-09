@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "CVPilot AI" },
+      { name: "description", content: "Know Why Recruiters Reject Your Resume — And Fix It Instantly." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "CVPilot AI" },
+      { property: "og:description", content: "Know Why Recruiters Reject Your Resume — And Fix It Instantly." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "CVPilot AI" },
+      { name: "twitter:description", content: "Know Why Recruiters Reject Your Resume — And Fix It Instantly." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/838469ff-5ee0-4927-96e6-4a8930b22143" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/838469ff-5ee0-4927-96e6-4a8930b22143" },
     ],
     links: [
       {
