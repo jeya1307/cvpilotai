@@ -143,13 +143,17 @@ function HomePage() {
 
       setStep("match", "active");
       setStep("draft", "active");
-      const out = (await runApply({
+      const response = await runApply({
         data: {
           candidateName: name,
           resume: resumeText,
           jobDescription: jobDesc,
         },
-      })) as ApplyResult;
+      });
+      if (!response.ok) {
+        throw new Error(response.error);
+      }
+      const out = response.data as ApplyResult;
       setStep("match", "done");
       setStep("draft", "done");
 
