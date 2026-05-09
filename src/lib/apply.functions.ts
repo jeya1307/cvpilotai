@@ -25,7 +25,7 @@ type Output = z.infer<typeof OutputSchema>;
 
 export type ApplyResponse =
   | { ok: true; data: Output }
-  | { ok: false; error: string; rawText?: string; partial?: unknown };
+  | { ok: false; error: string; rawText?: string };
 
 function extractJson(text: string): unknown {
   const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
