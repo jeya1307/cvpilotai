@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, Output } from "ai";
+import { generateObject } from "ai";
 import { z } from "zod";
 import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 
@@ -10,13 +10,13 @@ const InputSchema = z.object({
 });
 
 const OutputSchema = z.object({
-  jobTitle: z.string(),
-  company: z.string(),
-  matchScore: z.number().min(0).max(100),
-  matchedSkills: z.array(z.string()).max(15),
-  missingSkills: z.array(z.string()).max(10),
-  tailoredSummary: z.string(),
-  coverLetter: z.string(),
+  jobTitle: z.string().describe("The job title from the description"),
+  company: z.string().describe("The company name, or 'Unknown' if not stated"),
+  matchScore: z.number().describe("Match score 0-100"),
+  matchedSkills: z.array(z.string()).describe("Skills present in both resume and JD"),
+  missingSkills: z.array(z.string()).describe("Skills required by JD but missing from resume"),
+  tailoredSummary: z.string().describe("3-sentence professional summary tailored to the role"),
+  coverLetter: z.string().describe("Concise cover letter under 220 words, no placeholders"),
   recommendation: z.enum(["apply", "review", "skip"]),
   recommendationReason: z.string(),
 });
@@ -32,16 +32,18 @@ export const processApplication = createServerFn({ method: "POST" })
     const gateway = createLovableAiGatewayProvider(apiKey);
     const model = gateway("google/gemini-3-flash-preview");
 
-    const { output } = await generateText({
+    const { object } = await generateObject({
       model,
-      output: Output.object({ schema: OutputSchema }),
+      schema: OutputSchema,
+      schemaName: "JobApplicationAnalysis",
       system:
         "You are an expert career coach automating job applications. " +
         "Given a candidate's resume and a job description, extract job info, " +
         "compute a match score, identify matched and missing skills, write a " +
         "tailored 3-sentence professional summary, and a concise cover letter " +
         "(under 220 words, addressed to the hiring manager, no placeholders). " +
-        "Be specific, reference real resume facts, and never invent credentials.",
+        "Be specific, reference real resume facts, and never invent credentials. " +
+        "Always return valid JSON matching the schema exactly.",
       prompt: `CANDIDATE NAME: ${data.candidateName}
 
 RESUME:
@@ -51,5 +53,5 @@ JOB DESCRIPTION:
 ${data.jobDescription}`,
     });
 
-    return output;
+    return object;
   });
